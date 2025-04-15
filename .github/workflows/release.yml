@@ -1,0 +1,35 @@
+# The `release.yml` file is under the MPL-2.0 license.
+# It is a modified version of the same file from [Ferium](https://github.com/gorilla-devs/ferium).
+
+name: Publish and Release
+
+on:
+  workflow_dispatch:
+  push:
+    tags: "*"
+
+jobs:
+  gh-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create `out/`
+        run: mkdir out
+    
+      - name: Create an archive
+        run: git archive --format=zip --output ./out/FlowerCrownHelmets.zip main
+
+      - name: Get the latest tag
+        run: echo "TAG=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
+
+      - name: Create release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ./out/**
+          name: Flower Crown Helmets ${{ env.TAG }}
+          tag_name: ${{ env.TAG }}
+          body: |
+            To install, download the ZIP file and place it in your `resourcepacks` folder.
+            Then you'll be able to see it in your resourcepacks menu in Minecraft.
+
+            [need help?](https://minecraft.wiki/w/Tutorial:Loading_a_resource_pack)
