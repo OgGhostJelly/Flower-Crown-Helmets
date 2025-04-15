@@ -13,11 +13,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Create `out/`
         run: mkdir out
     
       - name: Create an archive
-        run: git archive --format=zip --output ./out/FlowerCrownHelmets.zip main
+        run: git archive --format=zip --output ./out/FlowerCrownHelmets.zip HEAD
 
       - name: Get the latest tag
         run: echo "TAG=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
